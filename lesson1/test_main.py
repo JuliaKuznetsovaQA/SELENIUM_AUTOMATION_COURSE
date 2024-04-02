@@ -1,112 +1,11 @@
 import selenium.common.exceptions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 import pytest
 from selenium.webdriver.support.ui import Select
 import time
+from locators import *
+from data import *
 
-browser = webdriver.Chrome()
-
-@pytest.fixture
-def auth():
-    auth = webdriver.Chrome()
-    auth.get("https://www.saucedemo.com/")
-    auth.find_element('id', 'user-name').send_keys('standard_user')
-    auth.find_element(By.XPATH, '//*[@id="password"]').send_keys('secret_sauce')
-    auth.find_element(By.XPATH, '//*[@id="login-button"]').click()
-    yield auth
-    auth.quit()
-
-"""Авторизация"""
-def test_auth_positive():
-    """Авторизация используя корректные данные (standard_user, secret_sauce)"""
-    browser.get("https://www.saucedemo.com/")
-
-    browser.find_element('id', 'user-name').send_keys('standard_user')
-    browser.find_element(By.XPATH, '//*[@id="password"]').send_keys('secret_sauce')
-    browser.find_element(By.XPATH, '//*[@id="login-button"]').click()
-    assert browser.current_url == 'https://www.saucedemo.com/inventory.html', 'url не соответствует ожидаемому'
-
-    browser.quit()
-
-
-def test_auth_negative():
-    """Авторизация используя некорректные данные (user, user)"""
-
-    browser.get("https://www.saucedemo.com/")
-
-    browser.find_element('id', 'user-name').send_keys('user')
-    browser.find_element(By.XPATH, '//*[@id="password"]').send_keys('user')
-    browser.find_element(By.XPATH, '//*[@id="login-button"]').click()
-    assert browser.find_element(By.XPATH, '//*[@id="login_button_container"]/div/form/div[3]/h3').is_displayed()
-    assert browser.current_url != 'https://www.saucedemo.com/inventory.html', 'url не соответствует ожидаемому'
-
-    browser.quit()
-
-"""Корзина"""
-def test_add_to_cart():
-    """Добавление товара в корзину через каталог"""
-
-    browser.get("https://www.saucedemo.com/")
-    browser.find_element('id', 'user-name').send_keys('standard_user')
-    browser.find_element(By.XPATH, '//*[@id="password"]').send_keys('secret_sauce')
-    browser.find_element(By.XPATH, '//*[@id="login-button"]').click()
-    browser.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-backpack"]').click()
-    browser.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a').click()
-    assert browser.find_element(By.XPATH, '//*[text()="Sauce Labs Backpack"]').is_displayed()
-    browser.quit()
-
-
-def test_remove_from_cart():
-    try:
-        browser.get("https://www.saucedemo.com/")
-        browser.find_element('id', 'user-name').send_keys('standard_user')
-        browser.find_element(By.XPATH, '//*[@id="password"]').send_keys('secret_sauce')
-        browser.find_element(By.XPATH, '//*[@id="login-button"]').click()
-        browser.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-backpack"]').click()
-        browser.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a').click()
-        browser.find_element(By.XPATH, '//*[@id="remove-sauce-labs-backpack"]').click()
-        with pytest.raises(selenium.common.exceptions.NoSuchElementException):
-            browser.find_element(By.XPATH, '//*[text()="Sauce Labs Backpack"]')
-            pytest.fail("Не должно быть товара в корзине")
-    finally:
-        browser.quit()
-
-
-def test_add_to_cart_from_item_card(auth):
-    """Добавление товара в корзину из карточки товара"""
-    auth.find_element(By.XPATH, '// *[text() = "Sauce Labs Fleece Jacket"]').click()
-    auth.find_element(By.ID, 'add-to-cart').click()
-    auth.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a').click()
-    assert auth.find_element(By.XPATH, '// *[text() = "Sauce Labs Fleece Jacket"]').is_displayed()
-
-
-def test_remove_from_item_card(auth):
-    """Удаление товара из корзины через карточку товара"""
-    auth.find_element(By.XPATH, '// *[text() = "Sauce Labs Fleece Jacket"]').click()
-    auth.find_element(By.ID, 'add-to-cart').click()
-    auth.find_element(By.ID, 'remove').click()
-    auth.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a').click()
-    try:
-        with pytest.raises(selenium.common.exceptions.NoSuchElementException):
-            auth.find_element(By.XPATH, '//*[text()="Sauce Labs Fleece Jacket"]')
-            pytest.fail("Не должно быть товара в корзине")
-    finally:
-        auth.quit()
-
-
-"""Карточка товара"""
-
-def test_item_card_from_image(auth):
-    """Успешный переход к карточке товара после клика на картинку товара"""
-    auth.find_element(By.ID, 'item_1_img_link').click()
-    assert auth.current_url == 'https://www.saucedemo.com/inventory-item.html?id=1', 'Url не соответствует ожидаемому'
-
-
-def test_item_card_from_title(auth):
-    """Успешный переход к карточке товара после клика на название товара"""
-    auth.find_element(By.ID, 'item_0_title_link').click()
-    assert auth.current_url == 'https://www.saucedemo.com/inventory-item.html?id=0', 'Url не соответствует ожидаемому'
 
 """Оформление заказа"""
 def test_purchase(auth):
