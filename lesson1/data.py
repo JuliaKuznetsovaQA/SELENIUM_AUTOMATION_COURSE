@@ -9,7 +9,8 @@ password = 'secret_sauce'
 
 main_page = 'https://www.saucedemo.com/'
 catalogue = 'https://www.saucedemo.com/inventory.html'
-
+checkout_complete = 'https://www.saucedemo.com/checkout-complete.html'
+about = 'https://saucelabs.com/'
 
 @dataclass
 class User:
