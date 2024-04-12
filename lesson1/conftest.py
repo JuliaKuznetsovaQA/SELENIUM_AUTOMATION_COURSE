@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from data import *
 from locators import *
 
+def chrome_options():
+    options = Options()
+
 
 @pytest.fixture()
 def browser():
