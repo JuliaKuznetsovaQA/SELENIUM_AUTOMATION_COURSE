@@ -1,9 +1,12 @@
+import allure
 from selenium.webdriver.common.by import By
 from locators import *
 from data import *
 
 
-"""Авторизация"""
+@allure.title("Testing login")
+@allure.description("Тест проверяет логинку")
+@allure.severity_level.BLOCKER
 def test_auth_positive(auth):
     """Авторизация используя корректные данные (standard_user, secret_sauce)"""
 

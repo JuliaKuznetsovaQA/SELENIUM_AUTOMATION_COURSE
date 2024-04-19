@@ -3,10 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from data import *
 from locators import *
-
-def chrome_options():
-    options = Options()
-
+import allure
 
 @pytest.fixture()
 def browser():

@@ -1,8 +1,5 @@
-import random
-
 import pytest
 from selenium import webdriver
-from random import *
 
 
 @pytest.fixture()

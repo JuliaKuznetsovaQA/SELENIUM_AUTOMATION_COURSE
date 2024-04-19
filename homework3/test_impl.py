@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 import pytest
 from locators import *
 from data import *
-import time
 
 @pytest.fixture
 def chrome_options():
@@ -15,18 +14,16 @@ def chrome_options():
 @pytest.fixture
 def driver(chrome_options):
     driver = webdriver.Chrome(options=chrome_options)
-    driver.implicitly_wait(30)
+    driver.implicitly_wait(10)
     yield driver
     driver.quit()
 
 
-# @pytest.fixture
+@pytest.fixture
 def test_start(driver):
     driver.get(main_page)
     assert driver.find_element(By.XPATH, h1).text == "Практика с ожиданиями в Selenium"
     """Дождаться появления кнопки "Начать тестирование"""
-    # time.sleep(10)
-    # driver.implicitly_wait(10)
     start_testing_button = driver.find_element(By.XPATH, start_test_button)
     assert start_testing_button.text == 'Начать тестирование'
     """Найти кнопку: Найти на странице кнопку с текстом "Начать тестирование"."""
