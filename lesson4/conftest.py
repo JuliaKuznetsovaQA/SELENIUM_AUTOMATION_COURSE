@@ -1,15 +1,15 @@
 import pytest
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from lesson4.pages.auth_page import LoginPage
-# from urls import base_url
-
-base_url = 'https://victoretc.github.io/selenium_waits/'
+from selenium.webdriver.chrome.service import Service
+from lesson4.urls import base_url
 
 @pytest.fixture
 def driver():
     options = webdriver.ChromeOptions()
     # options.add_argument('--headless')
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().install()))
     yield driver
     driver.quit()
 

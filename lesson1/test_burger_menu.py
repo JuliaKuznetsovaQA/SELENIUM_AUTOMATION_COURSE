@@ -26,6 +26,7 @@ def test_burger_about(auth, wait):
     """Проверка работоспособности кнопки "About" в меню"""
     auth.find_element(By.XPATH, burger_menu).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, burger_about)))
+    wait.until(EC.visibility_of_element_located((By.XPATH, burger_about)))
     auth.find_element(By.XPATH, burger_about).click()
     assert auth.current_url == about, 'About failed'
 
